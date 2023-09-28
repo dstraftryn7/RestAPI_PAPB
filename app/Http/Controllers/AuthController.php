@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     //Register User
-    public function register(Request $request) 
+    public function register(Request $request)
     {
         $attrs = $request->validate([
             'name' => 'required|string',
@@ -53,7 +53,7 @@ class AuthController extends Controller
     // logout user
     public function logout()
     {
-     auth()->user()->tokens()-delete();
+     auth()->user()->tokens()->delete();
      return response([
         'message' => 'Logout Success.'
      ], 200);

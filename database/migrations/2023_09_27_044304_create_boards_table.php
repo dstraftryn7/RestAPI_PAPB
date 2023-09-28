@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->id();
-            $table -> string('nama');
+            $table->integer('users_id');
+            $table->string('nama');
             $table->timestamps();
         });
     }
