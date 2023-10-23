@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\BoardController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,4 +21,9 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/tasks', [TaskController::class, 'index']);
+    Route::post('/tasks-create', [TaskController::class, 'store']);
+    Route::post('/boards-create', [BoardController::class, 'store']);
+    Route::get('/boards', [BoardController::class, 'index']);
 });
+

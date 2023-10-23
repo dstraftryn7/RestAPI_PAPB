@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->id();
-            $table->integer('users_id');
-            $table->string('nama');
+            $table->foreignId('user_id')->constrained();
+            $table -> string('nama');
             $table->timestamps();
         });
     }

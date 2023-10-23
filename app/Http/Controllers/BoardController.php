@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Boards;
+use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller
 {
@@ -11,7 +13,9 @@ class BoardController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'boards' => Boards::where('user_id', Auth::id())->latest()->get(),
+        ]);
     }
 
     /**
@@ -27,7 +31,18 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'nama' => 'required',
+            'user_id' => ''
+        ]);
+
+        $validateData['user_id'] = auth()->user()->id;
+
+        $board = Boards::create($validateData);
+
+        return response()->json([
+            'board' => $board
+        ]);
     }
 
     /**
