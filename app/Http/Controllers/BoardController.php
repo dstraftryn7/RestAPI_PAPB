@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Boards;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller
@@ -58,7 +58,19 @@ class BoardController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $board = Boards::find($id);
+
+        if (!$board) {
+            return response()->json([
+                'message' => 'Board not found'
+            ], 404);
+        }
+    
+        return response()->json([
+            'message' => 'Board updated successfully',
+            'board' => $board
+        ]);
+
     }
 
     /**
@@ -66,7 +78,22 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $board = Boards::find($id);
+
+        if (!$board) {
+            return response()->json([
+                'message' => 'Board not found'
+            ], 404);
+        }
+        
+    
+        $board->nama = $request->nama;
+        $board->save();
+    
+        return response()->json([
+            'message' => 'Board updated successfully',
+            'board' => $board
+        ]);
     }
 
     /**
@@ -74,6 +101,11 @@ class BoardController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $board = Boards::find($id);
+        $board->delete();
+
+        return response([
+            'message' => 'Deleted succes.'
+         ], 200);
     }
 }
