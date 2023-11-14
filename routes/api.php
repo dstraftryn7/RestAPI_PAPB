@@ -17,11 +17,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+use App\Http\Controllers\UserController;
 
-Route::group(['middleware' => ['auth:sanctum']], function() {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::resource('/tasks', TaskController::class);
-    Route::resource('/boards', BoardController::class);
+// Mendapatkan data pengguna
+Route::get('/user', [AuthController::class, 'getUser']);
 
-});
+// Menyimpan data pengguna
+Route::put('/user', [AuthController::class, 'updateUser']);
+
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/tasks', [TaskController::class, 'index']);
+Route::post('/tasks-create', [TaskController::class, 'store']);
+Route::get('/users',  [AuthController::class, 'profile']);
+Route::apiResource('/boards', BoardController::class);
+Route::delete('/boards/{id}', 'BoardController@destroy');
+
+
+// Route::group(['middleware' => ['auth:sanctum']], function() {
+//     Route::post('/logout', [AuthController::class, 'logout']);
+//     Route::get('/tasks', [TaskController::class, 'index']);
+//     Route::post('/tasks-create', [TaskController::class, 'store']);
+//     Route::get('/users',  [AuthController::class, 'profile']);
+//     Route::apiResource('/boards', BoardController::class);
+// });
 

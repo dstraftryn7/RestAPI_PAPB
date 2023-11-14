@@ -4,9 +4,9 @@ namespace App\Models;
 
 use App\Models\Tasks;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Boards extends Model
@@ -30,4 +30,6 @@ class Boards extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }
