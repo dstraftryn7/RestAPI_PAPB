@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('boards_id');
             $table-> string('title');
             $table-> text('description');
+            $table-> DateTime('datetime');
             $table-> boolean('status');
             $table->timestamps();
         });

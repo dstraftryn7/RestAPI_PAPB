@@ -11,11 +11,32 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json([
-            'tasks' => Tasks::where('user_id', Auth::id())->latest()->get(),
-        ]);
+        try {
+            $taskData = Tasks::all();
+            return response()->json([
+                'status code' => 200,
+                'message' => 'berhasil mengambil task',
+                'task' =>  $taskData,
+
+            ], 200);
+
+        } catch(ValidationException $e) {
+            return response()->json([
+                'status code' => 422,
+                'message' => 'gagal mengambil anggota',
+                'errors' => $e->errors(),
+            ], 422);
+
+        } catch(Exception $e){
+            return response()->json([
+                'status code' => 500,
+                'message' => 'ada kesalahan!',
+                'error' => $e
+            ], 500);
+
+        }
     }
 
     /**
@@ -31,24 +52,50 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $validateData = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-            'boards_id' => '',
-            'user_id' => ''
-        ]);
+        try {
+            $validateData = $request->validate([
+                'title' => 'required',
+                'description' => 'required',
+                'status' => 'required',
+                'datetime' => 'required',
+                'boards_id' => 'required',
+                'user_id' => 'required'
+            ]);
 
-        $validateData['user_id'] = auth()->user()->id;
+            $task = new Tasks;
+            $task->title = $validateData['title'];
+            $task->description = $validateData['description'];
+            $task->status = $validateData['status'];
+            $task->datetime = $validateData['datetime'];
+            $task->boards_id = $validateData['boards_id'];
+            $task->user_id = $validateData['user_id'];
+            $task->save();
 
-        $task = Tasks::create($validateData);
 
-        return response()->json([
-            'title' => $task->title,
-            'description' => $task->description,
-            'status' => $task->status,
-            'boards' => $task->boards_id
-        ]);
+            $taskData = Tasks::where('boards_id', $validateData['boards_id'])->get();
+
+            return response()->json([
+                'status code' => 200,
+                'message' => 'berhasil mengambil task',
+                'task' =>  $taskData,
+
+            ], 200);
+
+        } catch(ValidationException $e){
+            return response()->json([
+                'status code' => 422,
+                'message' => 'gagal mengambil anggota',
+                'errors' => $e->errors(),
+            ], 422);
+
+        } catch(Exception $e){
+            return response()->json([
+                'status code' => 500,
+                'message' => 'ada kesalahan!',
+                'error' => $e
+            ], 500);
+
+        }
     }
 
     /**
@@ -87,4 +134,15 @@ class TaskController extends Controller
             'message' => 'Deleted succes.'
          ], 200);
     }
+
+
+    public function getTodayTasks()
+{
+    $today = now()->format('Y-m-d');
+    
+    $tasks = Tasks::whereDate('due_date', $today)->get();
+
+    return response()->json($tasks);
+}
+
 }

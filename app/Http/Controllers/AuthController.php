@@ -20,12 +20,12 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $attrs['name'],
             'email'=> $attrs['email'],
-            'password' => bcrypt($attrs['password'])
+            'password' => $attrs['password']
         ]);
 
         return response([
             'user' => $user,
-            // 'token' => $user->createToken('secret')->plainTextToken
+            'token' => $user->createToken('secret')->plainTextToken
         ], 200);
     }
 
@@ -37,35 +37,34 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        
-
         if(!Auth::attempt($attrs))
         {
             return response([
-                'test' => !Auth::attempt($attrs),
                 'message' => 'Invalid credentials.'
             ], 403);
         }
 
         return response([
             'user' => auth()->user(),
-            // 'token'=>auth()->user()->createToken('token-name', ['server:update'])->plainTextToken,
+            'token'=>auth()->user()->createToken('token-name', ['server:update'])->plainTextToken,
         ], 200);
-    }
 
-    public function profile(Request $request)
-    {
-        $user = Auth::user();
-        return response()->json($user);
+        
     }
 
     // logout user
     public function logout()
     {
-    //  auth()->user()->tokens()->delete();
+     auth()->user()->tokens()->delete();
      return response([
         'message' => 'Logout Success.'
      ], 200);
+    }
+
+     public function profile(Request $request)
+    {
+        $user = Auth::user();
+        return response()->json(['user' => $user == null]);
     }
 
 
@@ -96,4 +95,15 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'User updated successfully']);
     }
+
+    public function show($id)
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    return response()->json($user);
+}
 }

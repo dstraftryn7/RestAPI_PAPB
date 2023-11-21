@@ -15,7 +15,7 @@ class BoardController extends Controller
     {
         return response()->json([
             // 'boards' => Boards::where('user_id', Auth::id())->latest()->get(),
-            'boards' => Boards::where('user_id', 1)->latest()->get(),
+            'boards' => Boards::latest()->get(),
         ]);
     }
 
@@ -51,7 +51,10 @@ class BoardController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return response()->json([
+            // 'boards' => Boards::where('user_id', Auth::id())->latest()->get(),
+            'boards' => Boards::where('user_id', $id)->latest()->get(),
+        ]);
     }
 
     /**
